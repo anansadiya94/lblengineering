@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import { img, site, type Lang } from '../lib/content';
+import { path, otherLang, ui, type PageKey } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  pageKey: PageKey | null;
+}
+
+const { lang, pageKey } = Astro.props;
+const t = ui[lang];
+const other = otherLang(lang);
+const links: PageKey[] = ['home', 'about', 'projects', 'contact'];
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href={path(lang, 'home')}>
+      <Image src={img(site.company.logo)} alt={t.logo_alt} widths={[150, 300]} sizes="150px" loading="eager" />
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 22 22"><path d="M2 5h18M2 11h18M2 17h18" stroke="currentColor" stroke-width="2" /></svg>
+      {t.menu}
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label={t.nav_label}>
+      <ul>
+        {
+          links.map((key) => (
+            <li>
+              <a href={path(lang, key)} aria-current={key === pageKey ? 'page' : undefined}>
+                {t[key]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="lang-switch" href={path(other, pageKey ?? 'home')} lang={other} hreflang={other}>
+        {ui[other].lang_name}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.getElementById('site-nav');
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      nav.classList.toggle('is-open', !open);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) {
+        toggle.setAttribute('aria-expanded', 'false');
+        nav.classList.remove('is-open');
+        toggle.focus();
+      }
+    });
+  }
+</script>

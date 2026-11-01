@@ -1,0 +1,139 @@
+---
+// Photo grid with a lightbox. Without JavaScript each photo links to its full-size file.
+import { Image, getImage } from 'astro:assets';
+import { img, type Lang, type Project } from '../lib/content';
+import { ui } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  projects: Project[];
+}
+
+const { lang, projects } = Astro.props;
+const t = ui[lang];
+
+const items = await Promise.all(
+  projects.map(async (p) => {
+    const meta = img(p.src);
+    const full = await getImage({ src: meta, width: Math.min(meta.width, 1600), format: 'webp' });
+    return {
+      meta,
+      full: full.src,
+      alt: p.alt[lang],
+      title: p.title?.[lang] ?? '',
+      description: p.description?.[lang] ?? '',
+    };
+  }),
+);
+---
+
+<ul class="gallery" data-gallery>
+  {
+    items.map((it, i) => (
+      <li data-reveal style={`--delay: ${(i % 3) * 80}ms`}>
+        <figure>
+          <a
+            class="gallery-link"
+            href={it.full}
+            data-index={i}
+            data-title={it.title}
+            data-description={it.description}
+            aria-label={`${t.enlarge}: ${it.title || it.alt}`}
+          >
+            <Image src={it.meta} alt={it.alt} widths={[400, 640, 800]} sizes="(min-width: 1100px) 33vw, (min-width: 640px) 50vw, 100vw" />
+          </a>
+          {it.title && (
+            <figcaption>
+              <span class="gallery-title">{it.title}</span>
+              {it.description && <span class="gallery-desc">{it.description}</span>}
+            </figcaption>
+          )}
+        </figure>
+      </li>
+    ))
+  }
+</ul>
+
+<dialog class="lightbox" aria-label={t.gallery} data-count-template={t.count}>
+  <div class="lightbox-inner">
+    <figure class="lightbox-figure">
+      <img class="lightbox-img" src="" alt="" />
+      <figcaption class="lightbox-caption">
+        <span class="lightbox-title"></span>
+        <span class="lightbox-desc"></span>
+      </figcaption>
+    </figure>
+    <div class="lightbox-bar">
+      <button type="button" class="icon-button" data-action="prev">
+        <svg aria-hidden="true" class="flip-rtl" width="20" height="20" viewBox="0 0 20 20"><path d="M13 3 6 10l7 7" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+        <span class="visually-hidden">{t.prev}</span>
+      </button>
+      <p class="lightbox-count" aria-live="polite"></p>
+      <button type="button" class="icon-button" data-action="next">
+        <span class="visually-hidden">{t.next}</span>
+        <svg aria-hidden="true" class="flip-rtl" width="20" height="20" viewBox="0 0 20 20"><path d="m7 3 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+      </button>
+      <button type="button" class="icon-button lightbox-close" data-action="close">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20"><path d="m4 4 12 12M16 4 4 16" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+        <span>{t.close}</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.lightbox');
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-gallery] .gallery-link')];
+
+  if (dialog && links.length && typeof dialog.showModal === 'function') {
+    const image = dialog.querySelector<HTMLImageElement>('.lightbox-img')!;
+    const title = dialog.querySelector<HTMLElement>('.lightbox-title')!;
+    const desc = dialog.querySelector<HTMLElement>('.lightbox-desc')!;
+    const count = dialog.querySelector<HTMLElement>('.lightbox-count')!;
+    const template = dialog.dataset.countTemplate ?? '{n} / {total}';
+    const rtl = document.documentElement.dir === 'rtl';
+    let current = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      current = (i + links.length) % links.length;
+      const link = links[current];
+      const thumb = link.querySelector('img');
+      image.src = link.href;
+      image.alt = thumb?.alt ?? '';
+      title.textContent = link.dataset.title ?? '';
+      desc.textContent = link.dataset.description ?? '';
+      count.textContent = template.replace('{n}', String(current + 1)).replace('{total}', String(links.length));
+    };
+
+    links.forEach((link, i) =>
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        opener = link;
+        show(i);
+        dialog.showModal();
+      }),
+    );
+
+    dialog.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const action = target.closest<HTMLElement>('[data-action]')?.dataset.action;
+      if (action === 'prev') show(current - 1);
+      else if (action === 'next') show(current + 1);
+      else if (action === 'close' || target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      // Arrow keys follow the reading direction: in Hebrew, left means "next".
+      const forward = (e.key === 'ArrowRight') !== rtl;
+      show(current + (forward ? 1 : -1));
+    });
+
+    dialog.addEventListener('close', () => {
+      image.src = '';
+      opener?.focus();
+    });
+  }
+</script>

@@ -1,0 +1,89 @@
+{
+  "_help": "Edit text here. Every visible string has a he and en version. Each project photo can also take an optional \"title\": {\"he\": \"\", \"en\": \"\"} and \"description\": {\"he\": \"\", \"en\": \"\"}; they show as captions in the gallery and lightbox. TODO(client): add project titles and descriptions.",
+  "site_url": "https://lblengineering.com",
+  "company": {
+    "name": { "he": "ל.ב.ל הנדסה וביצוע", "en": "LBL Engineering" },
+    "tagline": {
+      "he": "שירותים הנדסיים לעבודות בהנדסה אזרחית והנדסת מכונות",
+      "en": "Engineering services for civil and mechanical engineering works"
+    },
+    "logo": "images/brand/logo.jpg",
+    "address": {
+      "street": { "he": "גיבורי סיני 12", "en": "12 Giborei Sinai St." },
+      "city": { "he": "עכו", "en": "Akko" },
+      "postal_code": "",
+      "country": "IL"
+    },
+    "phone": "04-6814919",
+    "fax": "04-6814922",
+    "email": "Office@yhaj-eng.com",
+    "map_embed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3348.8546382973245!2d35.07385608481406!3d32.92843858092649!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151dc859de358005%3A0xd5d2f3be9fbb2ba5!2z15bXkNeRINeWJ9eR15XXmNeZ16DXoden15kgMTQsINei15vXlQ!5e0!3m2!1siw!2sil!4v1561480503421!5m2!1siw!2sil",
+    "map_link": "https://maps.google.com/?q=%D7%92%D7%99%D7%91%D7%95%D7%A8%D7%99+%D7%A1%D7%99%D7%A0%D7%99+12+%D7%A2%D7%9B%D7%95"
+  },
+
+  "team": [
+    {
+      "name": { "he": "אינג' חאג' ברקאת", "en": "Eng. Barakat Haj" },
+      "role": { "he": "מהנדס מכונות בכיר, מנהל משרד", "en": "Senior Mechanical Engineer, Office Manager" },
+      "phone": "052-2615233",
+      "email": "Barakat@yhaj-eng.com",
+      "photo": "images/team/barakat-haj.jpg"
+    },
+    {
+      "name": { "he": "אינג' חאג' יאסר", "en": "Eng. Yaser Haj" },
+      "role": { "he": "מהנדס אזרחי, מבנים", "en": "Civil Engineer, Structures" },
+      "phone": "054-5969972",
+      "email": "Yaser@yhaj-eng.com",
+      "photo": "images/team/yaser-haj.jpg"
+    },
+    {
+      "name": { "he": "אינג' אליאס וסים", "en": "Eng. Waseem Elias" },
+      "role": { "he": "מהנדס אזרחי, מבנים", "en": "Civil Engineer, Structures" },
+      "phone": "050-6225211",
+      "email": "waseemel@yhaj-eng.com",
+      "photo": "images/team/waseem-elias.jpg"
+    },
+    {
+      "name": { "he": "אינג' לואי עוטר", "en": "Eng. Luai Otter" },
+      "role": { "he": "מהנדס ביצוע", "en": "Site Engineer" },
+      "phone": null,
+      "email": "luai@yhaj-eng.com",
+      "photo": null
+    }
+  ],
+
+  "projects": [
+    { "src": "images/projects/project-01.jpg", "alt": { "he": "גשר הולכי רגל מפלדה בשלבי הקמה", "en": "Steel pedestrian bridge under construction" } },
+    { "src": "images/projects/project-02.jpg", "alt": { "he": "מבט מלמטה על קונסטרוקציית הפלדה של גשר הולכי רגל", "en": "View from below of a pedestrian bridge's steel structure" } },
+    { "src": "images/projects/project-03.jpg", "alt": { "he": "מבט אווירי על הרכבת גשר פלדה מעל כביש", "en": "Aerial view of a steel bridge being lifted into place over a road" } },
+    { "src": "images/projects/project-04.jpg", "alt": { "he": "מודל תלת-ממדי של גשר פלדה", "en": "3D model of a steel bridge" } },
+    { "src": "images/projects/project-05.jpg", "alt": { "he": "מודל תלת-ממדי של מבנה פלדה תעשייתי עם פלטפורמות ומדרגות", "en": "3D model of an industrial steel structure with platforms and stairs" } },
+    { "src": "images/projects/project-06.jpg", "alt": { "he": "קונסטרוקציית פלדה כחולה של מתקן תעשייתי בהקמה", "en": "Blue steel structure of an industrial plant under construction" } },
+    { "src": "images/projects/project-07.jpg", "alt": { "he": "מודל תלת-ממדי של סככת פלדה", "en": "3D model of a steel canopy" } },
+    { "src": "images/projects/project-08.jpg", "alt": { "he": "אולם ספורט עם גג פלדה", "en": "Sports hall with a steel roof" } },
+    { "src": "images/projects/project-09.jpg", "alt": { "he": "מבנה תעשייה מוגמר עם חזית מתכת", "en": "Completed industrial building with a metal facade" } },
+    { "src": "images/projects/project-10.jpg", "alt": { "he": "מודל תלת-ממדי של שלד פלדה למבנה תעשייה", "en": "3D model of a steel frame for an industrial building" } },
+    { "src": "images/projects/project-11.jpg", "alt": { "he": "מודל תלת-ממדי של גג פלדה", "en": "3D model of a steel roof structure" } },
+    { "src": "images/projects/project-12.jpg", "alt": { "he": "מודל תלת-ממדי של מתקן פלדה עם צנרת ופלטפורמות", "en": "3D model of a steel installation with piping and platforms" } },
+    { "src": "images/projects/project-13.jpg", "alt": { "he": "מודל תלת-ממדי של שלד פלדה למבנה גדול", "en": "3D model of a steel frame for a large building" } },
+    { "src": "images/projects/project-14.jpg", "alt": { "he": "פרט חיבור במודל תלת-ממדי של קונסטרוקציית פלדה", "en": "Connection detail in a 3D steel structure model" } },
+    { "src": "images/projects/project-15.jpg", "alt": { "he": "מודל של שלד פלדה", "en": "Model of a steel frame" } },
+    { "src": "images/projects/project-16.png", "alt": { "he": "מודל תלת-ממדי של מבנה פלדה", "en": "3D model of a steel structure" } }
+  ],
+
+  "home": {
+    "hero_image": "images/projects/project-02.jpg",
+    "projects_preview": [
+      "images/projects/project-01.jpg",
+      "images/projects/project-06.jpg",
+      "images/projects/project-03.jpg",
+      "images/projects/project-08.jpg",
+      "images/projects/project-05.jpg",
+      "images/projects/project-09.jpg"
+    ],
+    "about_image": "images/home/home-intro-a.jpg",
+    "contact_image": "images/projects/project-09.jpg"
+  },
+
+  "footer_image": "images/projects/project-06.jpg"
+}

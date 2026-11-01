@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import { img, site, telHref, type Lang } from '../lib/content';
+import { path, ui, type PageKey } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const c = site.company;
+const links: PageKey[] = ['home', 'about', 'projects', 'contact', 'accessibility'];
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer on-dark">
+  <div class="footer-photo">
+    <Image src={img(site.footer_image)} alt="" widths={[480, 800, 1200]} sizes="(min-width: 800px) 50vw, 100vw" />
+  </div>
+  <div class="footer-body">
+    <p class="footer-name">{c.name[lang]}</p>
+    <nav aria-label={t.footer_menu}>
+      <ul class="footer-menu">
+        {links.map((key) => <li><a href={path(lang, key)}>{t[key]}</a></li>)}
+      </ul>
+    </nav>
+    <address class="footer-contact">
+      <p>{c.address.street[lang]}, {c.address.city[lang]}</p>
+      <p>{t.phone}: <a href={telHref(c.phone)} dir="ltr">{c.phone}</a></p>
+      <p>{t.fax}: <span dir="ltr">{c.fax}</span></p>
+      <p>{t.email}: <a href={`mailto:${c.email}`}>{c.email}</a></p>
+    </address>
+    <p class="footer-legal">© {year} {c.name[lang]}. {t.rights}.</p>
+  </div>
+</footer>

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.vercel/
+.taste-skill/
+.DS_Store

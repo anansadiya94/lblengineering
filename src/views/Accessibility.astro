@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import { page, site, telHref, type Lang, type PageBase } from '../lib/content';
+import { ui } from '../lib/i18n';
+
+interface AccessibilityData extends PageBase {
+  title: string;
+  coordinator_name: string;
+  coordinator_phone: string;
+  coordinator_email: string;
+  last_updated: string;
+  contact_title: string;
+  contact_name_label: string;
+  updated_label: string;
+}
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const { data, Content } = page<AccessibilityData>(lang, 'accessibility');
+const t = ui[lang];
+// Falls back to the office details until the coordinator's details are filled in.
+const phone = data.coordinator_phone || site.company.phone;
+const email = data.coordinator_email || site.company.email;
+---
+
+<Base lang={lang} pageKey="accessibility" title={data.seo_title} description={data.seo_description}>
+  <article class="wrap prose-page">
+    <h1>{data.title}</h1>
+    <div class="prose">
+      <Content />
+    </div>
+    <section class="coordinator field-tint" aria-labelledby="coordinator-title">
+      <h2 id="coordinator-title">{data.contact_title}</h2>
+      <dl class="visit-lines">
+        {data.coordinator_name && <div><dt>{data.contact_name_label}</dt><dd>{data.coordinator_name}</dd></div>}
+        <div><dt>{t.phone}</dt><dd><a href={telHref(phone)} dir="ltr">{phone}</a></dd></div>
+        <div><dt>{t.email}</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>
+        <div><dt>{data.updated_label}</dt><dd>{data.last_updated}</dd></div>
+      </dl>
+    </section>
+  </article>
+</Base>

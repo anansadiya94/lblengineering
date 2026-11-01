@@ -1,0 +1,147 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ProjectStrip from '../components/ProjectStrip.astro';
+import { img, page, site, telHref, type Lang, type PageBase } from '../lib/content';
+import { path, ui } from '../lib/i18n';
+
+interface HomeData extends PageBase {
+  hero_title: string;
+  hero_text: string;
+  hero_cta: string;
+  services_title: string;
+  services: { title: string; text: string; image: string; image_alt: string }[];
+  about_title: string;
+  about_text: string;
+  about_image_alt: string;
+  about_facts: { label: string; value: string }[];
+  about_link: string;
+  projects_title: string;
+  projects_link: string;
+  contact_title: string;
+  contact_cta: string;
+}
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const { data } = page<HomeData>(lang, 'home');
+const t = ui[lang];
+const c = site.company;
+const home = site.home;
+
+// The swatch column beside the hero: each block links to a section and is
+// painted in that section's ground colour.
+const swatches = [
+  { id: 'services', label: data.services_title, field: 'field-tint' },
+  { id: 'about', label: data.about_title, field: 'field-charcoal' },
+  { id: 'projects', label: data.projects_title, field: 'field-stone' },
+  { id: 'contact', label: data.contact_title, field: 'field-teal' },
+];
+
+const preview = home.projects_preview.map((src) => site.projects.find((p) => p.src === src)!);
+---
+
+<Base lang={lang} pageKey="home" title={data.seo_title} description={data.seo_description}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-panel on-dark">
+      <Image
+        class="hero-img"
+        src={img(home.hero_image)}
+        alt=""
+        widths={[640, 960, 1200]}
+        sizes="(min-width: 800px) 82vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <div class="hero-copy">
+        <h1 id="hero-title">{data.hero_title}</h1>
+        <p class="hero-text">{data.hero_text}</p>
+        <a class="button" href={path(lang, 'contact')}>{data.hero_cta}</a>
+      </div>
+    </div>
+    <nav class="swatches" aria-label={t.on_this_page}>
+      <ul>
+        {
+          swatches.map((s) => (
+            <li class={s.field}>
+              <a href={`#${s.id}`}>{s.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </section>
+
+  <section id="services" class="services field-tint" aria-labelledby="services-title">
+    <div class="wrap services-grid">
+      <h2 id="services-title" class="services-title" data-reveal>{data.services_title}</h2>
+      {
+        data.services.map((s, i) => (
+          <div class={`svc-row svc-row-${i % 3}`} data-reveal>
+            <div class="svc-text">
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </div>
+            <figure class="svc-photo">
+              <Image src={img(s.image)} alt={s.image_alt} widths={[240, 480, 640]} sizes="(min-width: 800px) 24vw, 90vw" />
+            </figure>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="about" class="about-teaser field-charcoal on-dark" aria-labelledby="about-title">
+    <div class="wrap">
+      <div class="about-head" data-reveal>
+        <h2 id="about-title">{data.about_title}</h2>
+        <p class="lead">{data.about_text}</p>
+      </div>
+      <div class="about-tiles" data-reveal>
+        <figure class="about-photo">
+          <Image src={img(home.about_image)} alt={data.about_image_alt} widths={[480, 780]} sizes="(min-width: 800px) 60vw, 100vw" />
+        </figure>
+        <dl class="facts field-teal">
+          {
+            data.about_facts.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <p class="about-more" data-reveal><a href={path(lang, 'about')}>{data.about_link}</a></p>
+    </div>
+  </section>
+
+  <section id="projects" class="projects-preview field-stone" aria-labelledby="projects-title">
+    <div class="wrap section-head" data-reveal>
+      <h2 id="projects-title">{data.projects_title}</h2>
+      <a href={path(lang, 'projects')}>{data.projects_link}</a>
+    </div>
+    <ProjectStrip lang={lang} projects={preview} />
+  </section>
+
+  <section id="contact" class="visit" aria-labelledby="contact-title">
+    <div class="visit-photo">
+      <Image src={img(home.contact_image)} alt="" widths={[640, 1024, 1536]} sizes="100vw" />
+    </div>
+    <div class="visit-card" data-reveal>
+      <h2 id="contact-title">{data.contact_title}</h2>
+      <address>
+        <p>{c.address.street[lang]}<br />{c.address.city[lang]}</p>
+        <dl class="visit-lines">
+          <div><dt>{t.phone}</dt><dd><a href={telHref(c.phone)} dir="ltr">{c.phone}</a></dd></div>
+          <div><dt>{t.fax}</dt><dd dir="ltr">{c.fax}</dd></div>
+          <div><dt>{t.email}</dt><dd><a href={`mailto:${c.email}`}>{c.email}</a></dd></div>
+        </dl>
+      </address>
+      <a class="button button-block" href={path(lang, 'contact')}>{data.contact_cta}</a>
+    </div>
+  </section>
+</Base>

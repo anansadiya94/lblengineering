@@ -1,0 +1,119 @@
+---
+// Contact form posting to Web3Forms (https://web3forms.com).
+// TODO(client): create a Web3Forms access key for the office email and set
+// PUBLIC_WEB3FORMS_KEY in .env (locally) and in Vercel's environment variables.
+import type { Lang } from '../lib/content';
+import { ui } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+---
+
+<form
+  class="contact-form"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  novalidate
+  data-contact-form
+  data-msg-name={t.form_err_name}
+  data-msg-email={t.form_err_email}
+  data-msg-email-invalid={t.form_err_email_invalid}
+  data-msg-summary={t.form_err_summary}
+  data-msg-sending={t.form_sending}
+  data-msg-success={t.form_success}
+  data-msg-error={t.form_error}
+>
+  <input type="hidden" name="access_key" value={accessKey} />
+  <input type="hidden" name="from_name" value={t.form_email_subject} />
+  <!-- Honeypot: hidden from people, bots fill it in and Web3Forms drops the message. -->
+  <div class="hp" aria-hidden="true">
+    <label>Leave empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  {!accessKey && <p class="form-note" role="note">{t.form_not_configured}</p>}
+
+  <div class="field">
+    <label for="cf-name">{t.form_name} <span class="req">{t.form_required}</span></label>
+    <input id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-error" />
+    <p class="field-error" id="cf-name-error"></p>
+  </div>
+  <div class="field">
+    <label for="cf-email">{t.form_email} <span class="req">{t.form_required}</span></label>
+    <input id="cf-email" name="email" type="email" autocomplete="email" dir="ltr" required aria-describedby="cf-email-error" />
+    <p class="field-error" id="cf-email-error"></p>
+  </div>
+  <div class="field">
+    <label for="cf-subject">{t.form_subject}</label>
+    <input id="cf-subject" name="subject" type="text" />
+  </div>
+  <div class="field">
+    <label for="cf-message">{t.form_message}</label>
+    <textarea id="cf-message" name="message" rows="6"></textarea>
+  </div>
+
+  <button class="button" type="submit">{t.form_send}</button>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const msg = form.dataset;
+    const status = form.querySelector<HTMLElement>('.form-status')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const name = form.querySelector<HTMLInputElement>('#cf-name')!;
+    const email = form.querySelector<HTMLInputElement>('#cf-email')!;
+
+    const setError = (input: HTMLInputElement, text: string) => {
+      const out = document.getElementById(input.id + '-error')!;
+      out.textContent = text;
+      if (text) input.setAttribute('aria-invalid', 'true');
+      else input.removeAttribute('aria-invalid');
+    };
+
+    const validate = () => {
+      setError(name, name.value.trim() ? '' : msg.msgName!);
+      const value = email.value.trim();
+      setError(email, !value ? msg.msgEmail! : email.validity.typeMismatch ? msg.msgEmailInvalid! : '');
+      return [name, email].filter((i) => i.hasAttribute('aria-invalid'));
+    };
+
+    [name, email].forEach((input) =>
+      input.addEventListener('blur', () => {
+        if (input.hasAttribute('aria-invalid')) validate();
+      }),
+    );
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const invalid = validate();
+      if (invalid.length) {
+        status.textContent = msg.msgSummary!;
+        invalid[0].focus();
+        return;
+      }
+      submit.disabled = true;
+      status.textContent = msg.msgSending!;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || json.success === false) throw new Error(json.message);
+        form.reset();
+        status.textContent = msg.msgSuccess!;
+      } catch {
+        status.textContent = msg.msgError!;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+</script>

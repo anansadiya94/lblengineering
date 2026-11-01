@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import TeamMember from '../components/TeamMember.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { page, site, telHref, type Lang, type PageBase } from '../lib/content';
+import { ui } from '../lib/i18n';
+
+interface ContactData extends PageBase {
+  title: string;
+  lead: string;
+  team_title: string;
+  office_title: string;
+  form_title: string;
+  map_title: string;
+}
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const { data } = page<ContactData>(lang, 'contact');
+const t = ui[lang];
+const c = site.company;
+---
+
+<Base lang={lang} pageKey="contact" title={data.seo_title} description={data.seo_description}>
+  <section class="page-head wrap" aria-labelledby="page-title">
+    <div class="page-head-text" data-reveal>
+      <h1 id="page-title">{data.title}</h1>
+      <p class="lead">{data.lead}</p>
+    </div>
+  </section>
+
+  <div class="wrap contact-grid">
+    <div class="contact-info">
+      <section aria-labelledby="office-title" data-reveal>
+        <h2 id="office-title">{data.office_title}</h2>
+        <address class="office">
+          <p class="office-address">{c.address.street[lang]}, {c.address.city[lang]}</p>
+          <dl class="visit-lines">
+            <div><dt>{t.phone}</dt><dd><a href={telHref(c.phone)} dir="ltr">{c.phone}</a></dd></div>
+            <div><dt>{t.fax}</dt><dd dir="ltr">{c.fax}</dd></div>
+            <div><dt>{t.email}</dt><dd><a href={`mailto:${c.email}`}>{c.email}</a></dd></div>
+          </dl>
+        </address>
+      </section>
+
+      <section aria-labelledby="team-title" data-reveal>
+        <h2 id="team-title">{data.team_title}</h2>
+        <div class="contact-team">
+          {site.team.map((m) => <TeamMember lang={lang} member={m} showPhoto={false} />)}
+        </div>
+      </section>
+    </div>
+
+    <section class="contact-form-wrap field-tint" aria-labelledby="form-title" data-reveal>
+      <h2 id="form-title">{data.form_title}</h2>
+      <ContactForm lang={lang} />
+    </section>
+  </div>
+
+  <section class="map-wrap" aria-label={data.map_title}>
+    <!-- TODO(client): this embed points to "זאב ז'בוטינסקי 14, עכו", but the office
+         address is גיבורי סיני 12. Confirm the address and replace map_embed in site.json. -->
+    <iframe
+      src={c.map_embed}
+      title={data.map_title}
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen></iframe>
+    <p class="wrap map-link"><a href={c.map_link}>{t.open_map}</a></p>
+  </section>
+</Base>
