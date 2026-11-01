@@ -61,46 +61,45 @@ Images are resized and converted to WebP automatically at build time, so you can
 ## Contact form (Web3Forms)
 
 1. Go to https://web3forms.com, enter the email address that should receive messages, and copy the access key it sends you.
-2. In Vercel: **Project → Settings → Environment Variables**, add `PUBLIC_WEB3FORMS_KEY` with that key, then redeploy.
+2. On GitHub: **Settings → Secrets and variables → Actions → New repository secret**. Name it `PUBLIC_WEB3FORMS_KEY` and paste the key. The next deploy picks it up (or re-run the latest "Deploy to GitHub Pages" workflow).
 3. Locally: put the same line in `.env`.
 
 Until a key is set, the form shows a note asking visitors to call or email instead. The form includes a hidden honeypot field (`botcheck`) that catches spam bots. Web3Forms keys are meant to be public, because they're used in the browser; the key only lets someone send messages to your inbox.
 
-## Deploy to Vercel (free)
+## Deploying (GitHub Pages)
 
-1. Push this repository to GitHub.
-2. At https://vercel.com, choose **Add New → Project**, import the repository and leave the defaults. Vercel detects Astro; the build command is `npm run build` and the output folder is `dist`.
-3. Add the `PUBLIC_WEB3FORMS_KEY` environment variable (see above) and deploy.
+The site is hosted free on GitHub Pages from this repository. `.github/workflows/deploy.yml` runs on every push to `main`: it installs, type-checks, builds, checks every link and image, and only then publishes. If any step fails, the live site stays as it was. You can watch runs under the repository's **Actions** tab, or start one by hand with **Run workflow**.
 
-After that, every push to `main` deploys automatically, and other branches get preview URLs.
+So to publish a change: edit the files, commit, and push to `main`.
 
-`vercel.json` holds:
-- 301 redirects from the old WordPress addresses (`/אודות/`, `/פרויקטים/`, `/יצירת-קשר/`, `/portfolio-item/*`, and the old Weglot `/en/...` versions) to the new pages. Each old Hebrew address is listed both percent-encoded and in plain Hebrew, so it matches either way.
-- 301 redirects from `www.lblengineering.com`, `lbl-eng.com` and `www.lbl-eng.com` to `https://lblengineering.com`, the canonical domain.
-- `cleanUrls` and `trailingSlash: false`, so pages live at `/about` (not `/about.html` or `/about/`).
+`public/CNAME` tells GitHub Pages the site's domain (`lblengineering.com`); leave it in place.
 
-## Domains and DNS at Hostinger
+Old WordPress addresses (`/אודות/`, `/portfolio-item/...` and so on) aren't redirected. They show the site's 404 page, which links back to the home page in both languages. The home page address is unchanged.
 
-In Vercel, open **Project → Settings → Domains** and add all four:
+## Domain and DNS at Hostinger
 
-| Domain | Setting in Vercel |
-| --- | --- |
-| `lblengineering.com` | Production (the main domain) |
-| `www.lblengineering.com` | Redirect to `lblengineering.com` (301) |
-| `lbl-eng.com` | Redirect to `lblengineering.com` (301) |
-| `www.lbl-eng.com` | Redirect to `lblengineering.com` (301) |
+In Hostinger: **Domains → lblengineering.com → DNS / Nameservers → Manage DNS records**.
 
-Then, in Hostinger: **Domains → (domain) → DNS / Nameservers → Manage DNS records**. For **each** of the two domains:
+1. **Delete** the existing `A`, `AAAA` and `CNAME` records for `@` and `www` that point at the old WordPress hosting.
+2. **Add** these records:
 
 | Type | Name | Value | TTL |
 | --- | --- | --- | --- |
-| A | `@` | the IP Vercel shows on the Domains page (commonly `76.76.21.21`) | 3600 |
-| CNAME | `www` | the target Vercel shows (commonly `cname.vercel-dns.com`) | 3600 |
+| A | `@` | `185.199.108.153` | 3600 |
+| A | `@` | `185.199.109.153` | 3600 |
+| A | `@` | `185.199.110.153` | 3600 |
+| A | `@` | `185.199.111.153` | 3600 |
+| CNAME | `www` | `anansadiya94.github.io` | 3600 |
 
-- **Use the exact values Vercel displays** next to each domain. Vercel now sometimes gives project-specific values, and those take precedence over the common defaults above.
-- **Delete** any existing `A`, `AAAA` or `CNAME` records for `@` and `www` that point at Hostinger's web hosting, or they'll conflict.
-- **Don't touch `MX` and `TXT` (SPF/DKIM) records** if the domain sends or receives email. Email keeps working independently of the website.
-- DNS changes usually take minutes, but can take up to 48 hours. Vercel issues the HTTPS certificates automatically once the records resolve.
+3. **Don't touch `MX` and `TXT` (SPF/DKIM) records** if the domain sends or receives email.
+4. Wait for DNS to update. That usually takes minutes, but can take up to 48 hours.
+5. On GitHub: **Settings → Pages**. When the custom-domain check shows a green tick, enable **Enforce HTTPS**. GitHub issues the certificate automatically; this can take up to an hour after DNS resolves.
+
+`www.lblengineering.com` then redirects to `lblengineering.com` automatically.
+
+Optional, recommended: verify the domain under your GitHub account (**Settings → Pages → Add a domain**, on your profile settings, not the repository). GitHub gives you one `TXT` record to add at Hostinger. This stops anyone else's GitHub Pages site from claiming the domain.
+
+After the site is live, add it to [Google Search Console](https://search.google.com/search-console) and submit `https://lblengineering.com/sitemap-index.xml` so Google picks up the new pages quickly.
 
 ## Accessibility
 
@@ -114,5 +113,5 @@ Built to WCAG 2.1 AA (Israeli Standard SI 5568). It uses semantic landmarks and 
 - [ ] **Map address.** The Google Maps embed points to "זאב ז'בוטינסקי 14, עכו", but the office address is "גיבורי סיני 12, עכו". Confirm the address and replace `map_embed` (and `map_link`) in `site.json`.
 - [ ] **Contact details.** Confirm everyone's phone and email (several are on `yhaj-eng.com`; Luai's old link pointed to Waseem's address).
 - [ ] **Accessibility coordinator.** Name, phone and email in both `accessibility.md` files, plus the office's physical accessibility if clients visit.
-- [ ] **Web3Forms access key** (see above).
+- [ ] **Web3Forms access key**, as a GitHub secret (see above).
 - [ ] Postal code for the address, if wanted in search results (`address.postal_code` in `site.json`).

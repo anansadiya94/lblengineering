@@ -17,7 +17,7 @@ async function htmlFiles(dir) {
 
 const exists = (p) => access(p).then(() => true, () => false);
 
-// Resolve a site path the way Vercel serves it with cleanUrls: /about → about.html, / → index.html.
+// Resolve a site path the way GitHub Pages serves it: /about/ → about/index.html, / → index.html.
 async function resolves(path) {
   const clean = decodeURI(path.split('#')[0].split('?')[0]);
   if (clean === '/' || clean === '') return exists(join(DIST, 'index.html'));

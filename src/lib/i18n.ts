@@ -12,11 +12,11 @@ export const routes = {
 
 export type PageKey = keyof typeof routes;
 
-/** Path of a page in a language: path('he','about') → "/about", path('en','home') → "/en". */
+/** Path of a page in a language: path('he','about') → "/about/", path('en','home') → "/en/". */
 export function path(lang: Lang, key: PageKey): string {
   const slug = routes[key];
-  if (lang === 'he') return '/' + slug;
-  return slug ? `/en/${slug}` : '/en';
+  const prefix = lang === 'he' ? '' : '/en';
+  return slug ? `${prefix}/${slug}/` : `${prefix}/`;
 }
 
 export const otherLang = (lang: Lang): Lang => (lang === 'he' ? 'en' : 'he');
