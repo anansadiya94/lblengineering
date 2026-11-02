@@ -1,5 +1,7 @@
 ---
-import '@fontsource-variable/heebo';
+import '@fontsource/ibm-plex-sans-hebrew/400.css';
+import '@fontsource/ibm-plex-sans-hebrew/500.css';
+import '@fontsource/ibm-plex-sans-hebrew/700.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -92,23 +94,5 @@ const jsonLd = {
       <slot />
     </main>
     <Footer lang={lang} />
-
-    <script is:inline>
-      // Entrance motion: sections fade up as they scroll into view. Content is visible
-      // without this script, and it does nothing when the visitor prefers reduced motion.
-      (function () {
-        var els = document.querySelectorAll('[data-reveal]');
-        if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          els.forEach(function (el) { el.classList.add('is-in'); });
-          return;
-        }
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
-          });
-        }, { rootMargin: '0px 0px -8% 0px' });
-        els.forEach(function (el) { io.observe(el); });
-      })();
-    </script>
   </body>
 </html>

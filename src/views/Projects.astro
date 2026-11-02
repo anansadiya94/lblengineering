@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Gallery from '../components/Gallery.astro';
+import Sheet from '../components/Sheet.astro';
 import { page, site, type Lang, type PageBase } from '../lib/content';
 
 interface ProjectsData extends PageBase {
@@ -17,12 +18,10 @@ const { data } = page<ProjectsData>(lang, 'projects');
 ---
 
 <Base lang={lang} pageKey="projects" title={data.seo_title} description={data.seo_description}>
-  <section class="page-head wrap" aria-labelledby="page-title">
-    <div class="page-head-text" data-reveal>
-      <h1 id="page-title">{data.title}</h1>
-      <p class="lead">{data.lead}</p>
-    </div>
-  </section>
+  <Sheet lang={lang} labelledby="page-title">
+    <h1 id="page-title">{data.title}</h1>
+    <p class="lead">{data.lead}</p>
+  </Sheet>
   <div class="wrap gallery-wrap">
     <Gallery lang={lang} projects={site.projects} />
   </div>
