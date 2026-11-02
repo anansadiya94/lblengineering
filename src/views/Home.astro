@@ -1,16 +1,20 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import ProjectStrip from '../components/ProjectStrip.astro';
-import { img, page, site, telHref, type Lang, type PageBase } from '../lib/content';
+import { img, page, site, telHref, type Lang, type PageBase, type Project } from '../lib/content';
 import { path, ui } from '../lib/i18n';
 
 interface HomeData extends PageBase {
   hero_title: string;
   hero_text: string;
   hero_cta: string;
+  compare_title: string;
+  compare_text: string;
+  compare_label: string;
+  compare_model: string;
+  compare_site: string;
   services_title: string;
-  services: { title: string; text: string; image: string; image_alt: string }[];
+  services: { title: string; text: string; points?: string[]; image: string; image_alt: string }[];
   about_title: string;
   about_text: string;
   about_image_alt: string;
@@ -32,65 +36,86 @@ const t = ui[lang];
 const c = site.company;
 const home = site.home;
 
-// The swatch column beside the hero: each block links to a section and is
-// painted in that section's ground colour.
-const swatches = [
-  { id: 'services', label: data.services_title, field: 'field-tint' },
-  { id: 'about', label: data.about_title, field: 'field-charcoal' },
-  { id: 'projects', label: data.projects_title, field: 'field-stone' },
-  { id: 'contact', label: data.contact_title, field: 'field-teal' },
-];
-
-const preview = home.projects_preview.map((src) => site.projects.find((p) => p.src === src)!);
+const project = (src: string): Project => site.projects.find((p) => p.src === src)!;
+const preview = home.projects_preview.map(project);
+const model = project(home.compare.model);
+const onSite = project(home.compare.site);
 ---
 
 <Base lang={lang} pageKey="home" title={data.seo_title} description={data.seo_description}>
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-panel on-dark">
-      <Image
-        class="hero-img"
-        src={img(home.hero_image)}
-        alt=""
-        widths={[640, 960, 1200]}
-        sizes="(min-width: 800px) 82vw, 100vw"
-        loading="eager"
-        fetchpriority="high"
-      />
-      <div class="hero-copy">
+  <section class="hero on-dark" aria-labelledby="hero-title">
+    <Image
+      class="hero-img"
+      src={img(home.hero_image)}
+      alt=""
+      widths={[640, 960, 1200]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="hero-copy">
+      <div class="wrap">
         <h1 id="hero-title">{data.hero_title}</h1>
         <p class="hero-text">{data.hero_text}</p>
         <a class="button" href={path(lang, 'contact')}>{data.hero_cta}</a>
       </div>
     </div>
-    <nav class="swatches" aria-label={t.on_this_page}>
-      <ul>
+  </section>
+
+  <section class="compare" aria-labelledby="compare-title" data-compare>
+    <div class="wrap compare-grid">
+      <div class="compare-text" data-reveal>
+        <h2 id="compare-title">{data.compare_title}</h2>
+        <p class="lead">{data.compare_text}</p>
+        <div class="compare-toggle" role="group" aria-label={data.compare_label} hidden>
+          <button type="button" aria-pressed="true" data-show="model">{data.compare_model}</button>
+          <button type="button" aria-pressed="false" data-show="site">{data.compare_site}</button>
+        </div>
+      </div>
+      <div class="compare-frame" data-reveal style="--delay: 90ms">
+        <figure class="compare-pic compare-model is-shown" data-pic="model">
+          <Image src={img(model.src)} alt={model.alt[lang]} widths={[800, 1200, 1574]} sizes="(min-width: 800px) 62vw, 100vw" />
+        </figure>
+        <figure class="compare-pic compare-site" data-pic="site">
+          <Image src={img(onSite.src)} alt={onSite.alt[lang]} widths={[640, 960]} sizes="(min-width: 800px) 62vw, 100vw" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="services field-tint" aria-labelledby="services-title" data-services>
+    <div class="wrap services-grid">
+      <h2 id="services-title" class="services-title" data-reveal>{data.services_title}</h2>
+      <div class="svc-stage" aria-hidden="true">
         {
-          swatches.map((s) => (
-            <li class={s.field}>
-              <a href={`#${s.id}`}>{s.label}</a>
+          data.services.map((s, i) => (
+            <Image
+              class={i === 0 ? 'is-shown' : undefined}
+              src={img(s.image)}
+              alt=""
+              data-svc-pic={i}
+              widths={[480, 720, 960]}
+              sizes="40vw"
+            />
+          ))
+        }
+      </div>
+      <ul class="svc-list">
+        {
+          data.services.map((s, i) => (
+            <li class="svc-item" data-svc={i} data-reveal>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+              {s.points && (
+                <ul class="svc-points">
+                  {s.points.map((pt) => <li>{pt}</li>)}
+                </ul>
+              )}
+              <Image class="svc-inline" src={img(s.image)} alt={s.image_alt} widths={[480, 720]} sizes="100vw" />
             </li>
           ))
         }
       </ul>
-    </nav>
-  </section>
-
-  <section id="services" class="services field-tint" aria-labelledby="services-title">
-    <div class="wrap services-grid">
-      <h2 id="services-title" class="services-title" data-reveal>{data.services_title}</h2>
-      {
-        data.services.map((s, i) => (
-          <div class={`svc-row svc-row-${i % 3}`} data-reveal>
-            <div class="svc-text">
-              <h3>{s.title}</h3>
-              <p>{s.text}</p>
-            </div>
-            <figure class="svc-photo">
-              <Image src={img(s.image)} alt={s.image_alt} widths={[240, 480, 640]} sizes="(min-width: 800px) 24vw, 90vw" />
-            </figure>
-          </div>
-        ))
-      }
     </div>
   </section>
 
@@ -124,7 +149,23 @@ const preview = home.projects_preview.map((src) => site.projects.find((p) => p.s
       <h2 id="projects-title">{data.projects_title}</h2>
       <a href={path(lang, 'projects')}>{data.projects_link}</a>
     </div>
-    <ProjectStrip lang={lang} projects={preview} />
+    <ul class="wrap work-grid">
+      {
+        preview.map((p, i) => (
+          <li data-reveal style={`--delay: ${(i % 3) * 70}ms`}>
+            <figure>
+              <Image
+                src={img(p.src)}
+                alt={p.alt[lang]}
+                widths={i === 0 ? [640, 960, 1280] : [400, 640]}
+                sizes={i === 0 ? '(min-width: 800px) 62vw, 100vw' : '(min-width: 800px) 30vw, 50vw'}
+              />
+              <figcaption>{p.title?.[lang] ?? p.alt[lang]}</figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <section id="contact" class="visit" aria-labelledby="contact-title">
@@ -145,3 +186,40 @@ const preview = home.projects_preview.map((src) => site.projects.find((p) => p.s
     </div>
   </section>
 </Base>
+
+<script>
+  // Model / on-site toggle: both photos show stacked without the script.
+  document.querySelectorAll<HTMLElement>('[data-compare]').forEach((root) => {
+    const toggle = root.querySelector<HTMLElement>('.compare-toggle')!;
+    const buttons = toggle.querySelectorAll<HTMLButtonElement>('[data-show]');
+    root.classList.add('is-live');
+    toggle.hidden = false;
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        root.querySelectorAll<HTMLElement>('[data-pic]').forEach((pic) => {
+          pic.classList.toggle('is-shown', pic.dataset.pic === btn.dataset.show);
+        });
+      });
+    });
+  });
+
+  // Services: the large photo beside the list follows the service in view, or under the pointer.
+  document.querySelectorAll<HTMLElement>('[data-services]').forEach((root) => {
+    const pics = root.querySelectorAll<HTMLElement>('[data-svc-pic]');
+    const items = root.querySelectorAll<HTMLElement>('[data-svc]');
+    const show = (i: string) => {
+      pics.forEach((p) => p.classList.toggle('is-shown', p.dataset.svcPic === i));
+      items.forEach((it) => it.classList.toggle('is-active', it.dataset.svc === i));
+    };
+    show('0');
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && show((e.target as HTMLElement).dataset.svc!)),
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    items.forEach((it) => {
+      io.observe(it);
+      it.addEventListener('pointerenter', () => show(it.dataset.svc!));
+    });
+  });
+</script>

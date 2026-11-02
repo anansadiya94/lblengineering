@@ -73,13 +73,18 @@
 
   "home": {
     "hero_image": "images/projects/project-02.jpg",
+    "_compare_help": "The model/site toggle under the hero shows these two photos of one bridge. TODO(client): confirm project-04 and project-03 are the same bridge.",
+    "compare": {
+      "model": "images/projects/project-04.jpg",
+      "site": "images/projects/project-03.jpg"
+    },
     "projects_preview": [
       "images/projects/project-01.jpg",
-      "images/projects/project-06.jpg",
-      "images/projects/project-03.jpg",
-      "images/projects/project-08.jpg",
-      "images/projects/project-05.jpg",
-      "images/projects/project-09.jpg"
+      "images/projects/project-13.jpg",
+      "images/projects/project-10.jpg",
+      "images/projects/project-11.jpg",
+      "images/projects/project-14.jpg",
+      "images/projects/project-07.jpg"
     ],
     "about_image": "images/home/home-intro-a.jpg",
     "contact_image": "images/projects/project-09.jpg"
