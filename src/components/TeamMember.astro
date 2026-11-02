@@ -8,10 +8,9 @@ interface Props {
   member: TeamMember;
   headingLevel?: 'h3' | 'h4';
   showPhoto?: boolean;
-  delay?: number; // entrance stagger in ms
 }
 
-const { lang, member, headingLevel = 'h3', showPhoto = true, delay = 0 } = Astro.props;
+const { lang, member, headingLevel = 'h3', showPhoto = true } = Astro.props;
 const t = ui[lang];
 const Heading = headingLevel;
 // Initials for members without a photo: "Eng. Luai Otter" → "LO".
@@ -23,7 +22,7 @@ const initials = member.name[lang]
   .slice(0, 2);
 ---
 
-<article class="member" data-reveal style={`--delay: ${delay}ms`}>
+<article class="member">
   {
     showPhoto &&
       (member.photo ? (

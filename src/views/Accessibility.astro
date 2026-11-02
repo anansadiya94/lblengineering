@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Sheet from '../components/Sheet.astro';
 import { page, site, telHref, type Lang, type PageBase } from '../lib/content';
 import { ui } from '../lib/i18n';
 
@@ -27,8 +28,10 @@ const email = data.coordinator_email || site.company.email;
 ---
 
 <Base lang={lang} pageKey="accessibility" title={data.seo_title} description={data.seo_description}>
-  <article class="wrap prose-page">
-    <h1>{data.title}</h1>
+  <Sheet lang={lang} labelledby="page-title">
+    <h1 id="page-title">{data.title}</h1>
+  </Sheet>
+  <article class="wrap prose-page" aria-labelledby="page-title">
     <div class="prose">
       <Content />
     </div>

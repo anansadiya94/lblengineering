@@ -32,6 +32,8 @@ export const ui = {
     projects: 'פרויקטים',
     contact: 'יצירת קשר',
     accessibility: 'הצהרת נגישות',
+    // Grid-axis labels drawn around page headings, as on a structural drawing.
+    axes: 'אבג',
     logo_alt: 'ל.ב.ל הנדסה וביצוע – לדף הבית',
     phone: 'טלפון',
     fax: 'פקס',
@@ -78,6 +80,7 @@ export const ui = {
     projects: 'Projects',
     contact: 'Contact',
     accessibility: 'Accessibility statement',
+    axes: 'ABC',
     logo_alt: 'LBL Engineering – home',
     phone: 'Phone',
     fax: 'Fax',

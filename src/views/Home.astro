@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Sheet from '../components/Sheet.astro';
 import { img, page, site, telHref, type Lang, type PageBase, type Project } from '../lib/content';
 import { path, ui } from '../lib/i18n';
 
@@ -43,28 +44,27 @@ const onSite = project(home.compare.site);
 ---
 
 <Base lang={lang} pageKey="home" title={data.seo_title} description={data.seo_description}>
-  <section class="hero on-dark" aria-labelledby="hero-title">
+  <Sheet lang={lang} size="hero" labelledby="hero-title">
+    <h1 id="hero-title">{data.hero_title}</h1>
+    <p class="hero-text">{data.hero_text}</p>
+    <div class="hero-actions">
+      <a class="button" href={path(lang, 'contact')}>{data.hero_cta}</a>
+      <a class="hero-phone" href={telHref(c.phone)}>{t.phone} <span dir="ltr">{c.phone}</span></a>
+    </div>
     <Image
-      class="hero-img"
+      slot="photo"
       src={img(home.hero_image)}
       alt=""
-      widths={[640, 960, 1200]}
-      sizes="100vw"
+      widths={[480, 800, 1100]}
+      sizes="(min-width: 800px) 55vw, 100vw"
       loading="eager"
       fetchpriority="high"
     />
-    <div class="hero-copy">
-      <div class="wrap">
-        <h1 id="hero-title">{data.hero_title}</h1>
-        <p class="hero-text">{data.hero_text}</p>
-        <a class="button" href={path(lang, 'contact')}>{data.hero_cta}</a>
-      </div>
-    </div>
-  </section>
+  </Sheet>
 
   <section class="compare" aria-labelledby="compare-title" data-compare>
     <div class="wrap compare-grid">
-      <div class="compare-text" data-reveal>
+      <div class="compare-text">
         <h2 id="compare-title">{data.compare_title}</h2>
         <p class="lead">{data.compare_text}</p>
         <div class="compare-toggle" role="group" aria-label={data.compare_label} hidden>
@@ -72,64 +72,45 @@ const onSite = project(home.compare.site);
           <button type="button" aria-pressed="false" data-show="site">{data.compare_site}</button>
         </div>
       </div>
-      <div class="compare-frame" data-reveal style="--delay: 90ms">
+      <div class="compare-frame">
         <figure class="compare-pic compare-model is-shown" data-pic="model">
-          <Image src={img(model.src)} alt={model.alt[lang]} widths={[800, 1200, 1574]} sizes="(min-width: 800px) 62vw, 100vw" />
+          <Image src={img(model.src)} alt={model.alt[lang]} widths={[800, 1200, 1574]} sizes="(min-width: 800px) 92vw, 100vw" />
         </figure>
         <figure class="compare-pic compare-site" data-pic="site">
-          <Image src={img(onSite.src)} alt={onSite.alt[lang]} widths={[640, 960]} sizes="(min-width: 800px) 62vw, 100vw" />
+          <Image src={img(onSite.src)} alt={onSite.alt[lang]} widths={[640, 960]} sizes="(min-width: 800px) 92vw, 100vw" />
         </figure>
       </div>
     </div>
   </section>
 
-  <section id="services" class="services field-tint" aria-labelledby="services-title" data-services>
-    <div class="wrap services-grid">
-      <h2 id="services-title" class="services-title" data-reveal>{data.services_title}</h2>
-      <div class="svc-stage" aria-hidden="true">
-        {
-          data.services.map((s, i) => (
-            <Image
-              class={i === 0 ? 'is-shown' : undefined}
-              src={img(s.image)}
-              alt=""
-              data-svc-pic={i}
-              widths={[480, 720, 960]}
-              sizes="40vw"
-            />
-          ))
-        }
-      </div>
-      <ul class="svc-list">
-        {
-          data.services.map((s, i) => (
-            <li class="svc-item" data-svc={i} data-reveal>
-              <h3>{s.title}</h3>
+  <section id="services" class="wrap services" aria-labelledby="services-title">
+    <h2 id="services-title">{data.services_title}</h2>
+    <ul class="schedule">
+      {
+        data.services.map((s) => (
+          <li>
+            <h3>{s.title}</h3>
+            <div class="schedule-text">
               <p>{s.text}</p>
               {s.points && (
                 <ul class="svc-points">
                   {s.points.map((pt) => <li>{pt}</li>)}
                 </ul>
               )}
-              <Image class="svc-inline" src={img(s.image)} alt={s.image_alt} widths={[480, 720]} sizes="100vw" />
-            </li>
-          ))
-        }
-      </ul>
-    </div>
+            </div>
+            <Image src={img(s.image)} alt={s.image_alt} widths={[240, 400, 560]} sizes="(min-width: 800px) 22vw, 100vw" />
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
-  <section id="about" class="about-teaser field-charcoal on-dark" aria-labelledby="about-title">
-    <div class="wrap">
-      <div class="about-head" data-reveal>
+  <section id="about" class="about-teaser on-dark" aria-labelledby="about-title">
+    <div class="wrap about-grid">
+      <div class="about-text">
         <h2 id="about-title">{data.about_title}</h2>
         <p class="lead">{data.about_text}</p>
-      </div>
-      <div class="about-tiles" data-reveal>
-        <figure class="about-photo">
-          <Image src={img(home.about_image)} alt={data.about_image_alt} widths={[480, 780]} sizes="(min-width: 800px) 60vw, 100vw" />
-        </figure>
-        <dl class="facts field-teal">
+        <dl class="facts">
           {
             data.about_facts.map((f) => (
               <div>
@@ -139,20 +120,23 @@ const onSite = project(home.compare.site);
             ))
           }
         </dl>
+        <p class="about-more"><a href={path(lang, 'about')}>{data.about_link}</a></p>
       </div>
-      <p class="about-more" data-reveal><a href={path(lang, 'about')}>{data.about_link}</a></p>
+      <figure class="about-photo">
+        <Image src={img(home.about_image)} alt={data.about_image_alt} widths={[480, 780]} sizes="(min-width: 800px) 45vw, 100vw" />
+      </figure>
     </div>
   </section>
 
-  <section id="projects" class="projects-preview field-stone" aria-labelledby="projects-title">
-    <div class="wrap section-head" data-reveal>
+  <section id="projects" class="projects-preview" aria-labelledby="projects-title">
+    <div class="wrap section-head">
       <h2 id="projects-title">{data.projects_title}</h2>
       <a href={path(lang, 'projects')}>{data.projects_link}</a>
     </div>
     <ul class="wrap work-grid">
       {
         preview.map((p, i) => (
-          <li data-reveal style={`--delay: ${(i % 3) * 70}ms`}>
+          <li>
             <figure>
               <Image
                 src={img(p.src)}
@@ -168,22 +152,11 @@ const onSite = project(home.compare.site);
     </ul>
   </section>
 
-  <section id="contact" class="visit" aria-labelledby="contact-title">
-    <div class="visit-photo">
-      <Image src={img(home.contact_image)} alt="" widths={[640, 1024, 1536]} sizes="100vw" />
-    </div>
-    <div class="visit-card" data-reveal>
-      <h2 id="contact-title">{data.contact_title}</h2>
-      <address>
-        <p>{c.address.street[lang]}<br />{c.address.city[lang]}</p>
-        <dl class="visit-lines">
-          <div><dt>{t.phone}</dt><dd><a href={telHref(c.phone)} dir="ltr">{c.phone}</a></dd></div>
-          <div><dt>{t.fax}</dt><dd dir="ltr">{c.fax}</dd></div>
-          <div><dt>{t.email}</dt><dd><a href={`mailto:${c.email}`}>{c.email}</a></dd></div>
-        </dl>
-      </address>
-      <a class="button button-block" href={path(lang, 'contact')}>{data.contact_cta}</a>
-    </div>
+  <section id="contact" class="wrap talk" aria-labelledby="contact-title">
+    <h2 id="contact-title">{data.contact_title}</h2>
+    <p class="talk-phone"><a href={telHref(c.phone)} dir="ltr">{c.phone}</a></p>
+    <p class="talk-email"><a href={`mailto:${c.email}`}>{c.email}</a></p>
+    <a class="button" href={path(lang, 'contact')}>{data.contact_cta}</a>
   </section>
 </Base>
 
@@ -201,25 +174,6 @@ const onSite = project(home.compare.site);
           pic.classList.toggle('is-shown', pic.dataset.pic === btn.dataset.show);
         });
       });
-    });
-  });
-
-  // Services: the large photo beside the list follows the service in view, or under the pointer.
-  document.querySelectorAll<HTMLElement>('[data-services]').forEach((root) => {
-    const pics = root.querySelectorAll<HTMLElement>('[data-svc-pic]');
-    const items = root.querySelectorAll<HTMLElement>('[data-svc]');
-    const show = (i: string) => {
-      pics.forEach((p) => p.classList.toggle('is-shown', p.dataset.svcPic === i));
-      items.forEach((it) => it.classList.toggle('is-active', it.dataset.svc === i));
-    };
-    show('0');
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && show((e.target as HTMLElement).dataset.svc!)),
-      { rootMargin: '-45% 0px -45% 0px' },
-    );
-    items.forEach((it) => {
-      io.observe(it);
-      it.addEventListener('pointerenter', () => show(it.dataset.svc!));
     });
   });
 </script>

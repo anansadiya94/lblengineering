@@ -1,6 +1,7 @@
 ---
-import { Image } from 'astro:assets';
-import { img, site, telHref, type Lang } from '../lib/content';
+// Laid out like the title block in the corner of an engineering drawing:
+// the firm in the large cell, contact details in the small ones.
+import { site, telHref, type Lang } from '../lib/content';
 import { path, ui, type PageKey } from '../lib/i18n';
 
 interface Props {
@@ -15,22 +16,22 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer on-dark">
-  <div class="footer-photo">
-    <Image src={img(site.footer_image)} alt="" widths={[480, 800, 1200]} sizes="(min-width: 800px) 50vw, 100vw" />
-  </div>
-  <div class="footer-body">
-    <p class="footer-name">{c.name[lang]}</p>
-    <nav aria-label={t.footer_menu}>
-      <ul class="footer-menu">
+  <div class="wrap title-block">
+    <div class="tb-firm">
+      <p class="tb-name">{c.name[lang]}</p>
+      <p class="tb-tagline">{c.tagline[lang]}</p>
+    </div>
+    <address class="tb-contact">
+      <p><span class="tb-label">{t.address}</span>{c.address.street[lang]}, {c.address.city[lang]}</p>
+      <p><span class="tb-label">{t.phone}</span><a href={telHref(c.phone)} dir="ltr">{c.phone}</a></p>
+      <p><span class="tb-label">{t.email}</span><a href={`mailto:${c.email}`}>{c.email}</a></p>
+      <p><span class="tb-label">{t.fax}</span><span dir="ltr">{c.fax}</span></p>
+    </address>
+    <nav class="tb-nav" aria-label={t.footer_menu}>
+      <ul>
         {links.map((key) => <li><a href={path(lang, key)}>{t[key]}</a></li>)}
       </ul>
     </nav>
-    <address class="footer-contact">
-      <p>{c.address.street[lang]}, {c.address.city[lang]}</p>
-      <p>{t.phone}: <a href={telHref(c.phone)} dir="ltr">{c.phone}</a></p>
-      <p>{t.fax}: <span dir="ltr">{c.fax}</span></p>
-      <p>{t.email}: <a href={`mailto:${c.email}`}>{c.email}</a></p>
-    </address>
-    <p class="footer-legal">© {year} {c.name[lang]}. {t.rights}.</p>
+    <p class="tb-legal">© {year} {c.name[lang]}. {t.rights}.</p>
   </div>
 </footer>
