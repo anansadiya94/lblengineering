@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Sheet from '../components/Sheet.astro';
 import TeamMember from '../components/TeamMember.astro';
 import { img, page, site, type Lang, type PageBase } from '../lib/content';
 
@@ -23,18 +24,14 @@ const { data } = page<AboutData>(lang, 'about');
 ---
 
 <Base lang={lang} pageKey="about" title={data.seo_title} description={data.seo_description}>
-  <section class="page-head wrap split" aria-labelledby="page-title">
-    <div class="page-head-text" data-reveal>
-      <h1 id="page-title">{data.title}</h1>
-      <p class="lead">{data.lead}</p>
-    </div>
-    <figure class="page-head-photo" data-reveal>
-      <Image src={img(data.image)} alt={data.image_alt} widths={[480, 780]} sizes="(min-width: 800px) 42vw, 100vw" loading="eager" />
-    </figure>
-  </section>
+  <Sheet lang={lang} labelledby="page-title">
+    <h1 id="page-title">{data.title}</h1>
+    <p class="lead">{data.lead}</p>
+    <Image slot="photo" src={img(data.image)} alt={data.image_alt} widths={[480, 780, 1100]} sizes="(min-width: 800px) 55vw, 100vw" loading="eager" />
+  </Sheet>
 
   <section class="field-tint band" aria-labelledby="services-title">
-    <div class="wrap services-list" data-reveal>
+    <div class="wrap services-list">
       <h2 id="services-title">{data.services_title}</h2>
       <ul>
         {data.services.map((s) => <li>{s}</li>)}
@@ -44,9 +41,9 @@ const { data } = page<AboutData>(lang, 'about');
 
   <section class="band" aria-labelledby="team-title">
     <div class="wrap">
-      <h2 id="team-title" data-reveal>{data.team_title}</h2>
+      <h2 id="team-title">{data.team_title}</h2>
       <div class="team-grid">
-        {site.team.map((m, i) => <TeamMember lang={lang} member={m} delay={i * 80} />)}
+        {site.team.map((m) => <TeamMember lang={lang} member={m} />)}
       </div>
     </div>
   </section>

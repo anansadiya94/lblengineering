@@ -30,7 +30,7 @@ const items = await Promise.all(
 <ul class="gallery" data-gallery>
   {
     items.map((it, i) => (
-      <li data-reveal style={`--delay: ${(i % 3) * 80}ms`}>
+      <li>
         <figure>
           <a
             class="gallery-link"

@@ -81,9 +81,6 @@
       "images/projects/project-05.jpg",
       "images/projects/project-09.jpg"
     ],
-    "about_image": "images/home/home-intro-a.jpg",
-    "contact_image": "images/projects/project-09.jpg"
-  },
-
-  "footer_image": "images/projects/project-06.jpg"
+    "about_image": "images/home/home-intro-a.jpg"
+  }
 }

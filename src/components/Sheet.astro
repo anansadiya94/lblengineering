@@ -1,0 +1,36 @@
+---
+// A page heading laid out like a structural drawing: dash-dot grid axes ending in
+// lettered and numbered bubbles. The text sits between axes A and B, the optional
+// photo (slot="photo") between B and C. Hebrew pages letter the axes א ב ג, as
+// Israeli drawings do.
+import type { Lang } from '../lib/content';
+import { ui } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  labelledby: string;
+  size?: 'hero' | 'page';
+}
+
+const { lang, labelledby, size = 'page' } = Astro.props;
+const [a, b, c] = [...ui[lang].axes];
+const hasPhoto = Astro.slots.has('photo');
+---
+
+<section class:list={['sheet', `sheet-${size}`, { 'has-photo': hasPhoto }]} aria-labelledby={labelledby}>
+  <span class="ax ax-v ax-a" style="--i: 0" aria-hidden="true"><b>{a}</b></span>
+  {hasPhoto && <span class="ax ax-v ax-b" style="--i: 1" aria-hidden="true"><b>{b}</b></span>}
+  <span class="ax ax-v ax-c" style="--i: 2" aria-hidden="true"><b>{hasPhoto ? c : b}</b></span>
+  <span class="ax ax-h ax-1" style="--i: 1" aria-hidden="true"><b>1</b></span>
+  <span class="ax ax-h ax-2" style="--i: 3" aria-hidden="true"><b>2</b></span>
+  <div class="sheet-copy">
+    <slot />
+  </div>
+  {
+    hasPhoto && (
+      <div class="sheet-photo">
+        <slot name="photo" />
+      </div>
+    )
+  }
+</section>
