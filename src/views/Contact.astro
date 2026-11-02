@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Sheet from '../components/Sheet.astro';
-import TeamMember from '../components/TeamMember.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { page, site, telHref, type Lang, type PageBase } from '../lib/content';
 import { ui } from '../lib/i18n';
@@ -9,7 +8,6 @@ import { ui } from '../lib/i18n';
 interface ContactData extends PageBase {
   title: string;
   lead: string;
-  team_title: string;
   office_title: string;
   form_title: string;
   map_title: string;
@@ -39,17 +37,9 @@ const c = site.company;
           <p class="office-address">{c.address.street[lang]}, {c.address.city[lang]}</p>
           <dl class="visit-lines">
             <div><dt>{t.phone}</dt><dd><a href={telHref(c.phone)} dir="ltr">{c.phone}</a></dd></div>
-            <div><dt>{t.fax}</dt><dd dir="ltr">{c.fax}</dd></div>
             <div><dt>{t.email}</dt><dd><a href={`mailto:${c.email}`}>{c.email}</a></dd></div>
           </dl>
         </address>
-      </section>
-
-      <section aria-labelledby="team-title">
-        <h2 id="team-title">{data.team_title}</h2>
-        <div class="contact-team">
-          {site.team.map((m) => <TeamMember lang={lang} member={m} showPhoto={false} />)}
-        </div>
       </section>
     </div>
 

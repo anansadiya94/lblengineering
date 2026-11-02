@@ -15,42 +15,10 @@
       "country": "IL"
     },
     "phone": "04-6814919",
-    "fax": "04-6814922",
     "email": "Office@yhaj-eng.com",
     "map_embed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3348.8546382973245!2d35.07385608481406!3d32.92843858092649!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151dc859de358005%3A0xd5d2f3be9fbb2ba5!2z15bXkNeRINeWJ9eR15XXmNeZ16DXoden15kgMTQsINei15vXlQ!5e0!3m2!1siw!2sil!4v1561480503421!5m2!1siw!2sil",
     "map_link": "https://maps.google.com/?q=%D7%92%D7%99%D7%91%D7%95%D7%A8%D7%99+%D7%A1%D7%99%D7%A0%D7%99+12+%D7%A2%D7%9B%D7%95"
   },
-
-  "team": [
-    {
-      "name": { "he": "אינג' חאג' ברקאת", "en": "Eng. Barakat Haj" },
-      "role": { "he": "מהנדס מכונות בכיר, מנהל משרד", "en": "Senior Mechanical Engineer, Office Manager" },
-      "phone": "052-2615233",
-      "email": "Barakat@yhaj-eng.com",
-      "photo": "images/team/barakat-haj.jpg"
-    },
-    {
-      "name": { "he": "אינג' חאג' יאסר", "en": "Eng. Yaser Haj" },
-      "role": { "he": "מהנדס אזרחי, מבנים", "en": "Civil Engineer, Structures" },
-      "phone": "054-5969972",
-      "email": "Yaser@yhaj-eng.com",
-      "photo": "images/team/yaser-haj.jpg"
-    },
-    {
-      "name": { "he": "אינג' אליאס וסים", "en": "Eng. Waseem Elias" },
-      "role": { "he": "מהנדס אזרחי, מבנים", "en": "Civil Engineer, Structures" },
-      "phone": "050-6225211",
-      "email": "waseemel@yhaj-eng.com",
-      "photo": "images/team/waseem-elias.jpg"
-    },
-    {
-      "name": { "he": "אינג' לואי עוטר", "en": "Eng. Luai Otter" },
-      "role": { "he": "מהנדס ביצוע", "en": "Site Engineer" },
-      "phone": null,
-      "email": "luai@yhaj-eng.com",
-      "photo": null
-    }
-  ],
 
   "projects": [
     { "src": "images/projects/project-01.jpg", "alt": { "he": "גשר הולכי רגל מפלדה בשלבי הקמה", "en": "Steel pedestrian bridge under construction" } },

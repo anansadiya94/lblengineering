@@ -14,18 +14,8 @@ export interface Project {
   description?: Localized | null;
 }
 
-export interface TeamMember {
-  name: Localized;
-  role: Localized;
-  phone: string | null;
-  email: string | null;
-  // TODO(client): Luai has no photo. images/team/team-member-2021.png is probably him; confirm before using it.
-  photo: string | null;
-}
-
 export const site = siteJson as typeof siteJson & {
   projects: Project[];
-  team: TeamMember[];
 };
 
 // ---------- Images ----------

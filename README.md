@@ -35,14 +35,14 @@ Everything you'd normally edit is in `content/`:
 
 ```
 content/
-├─ site.json        company details, address, phones, team, project photos, which photos the home page uses
+├─ site.json        company details, address, phone, project photos, which photos the home page uses
 ├─ he/*.md          Hebrew page text (home, about, projects, contact, accessibility)
 ├─ en/*.md          English page text, same files
-└─ images/          all photos (brand, hero, home, projects, team)
+└─ images/          all photos (brand, hero, home, projects)
 ```
 
 - **Text on a page:** open `content/he/<page>.md` (and the matching `content/en/<page>.md`) and edit the values between the `---` lines. The accessibility statement's body text is below the second `---`.
-- **Phone, email, address, team:** `content/site.json`. Each visible text has a `he` and an `en` version.
+- **Phone, email, address:** `content/site.json`. Each visible text has a `he` and an `en` version.
 - **Add a project photo:** put the image in `content/images/projects/`, then add an entry to `projects` in `site.json`:
   ```json
   {
@@ -109,9 +109,7 @@ Built to WCAG 2.1 AA (Israeli Standard SI 5568). It uses semantic landmarks and 
 
 - [ ] **English review.** All English text was translated from the Hebrew by AI (`content/en/*.md`, English labels in `src/lib/i18n.ts`, English fields in `site.json`).
 - [ ] **Project titles and descriptions.** Add optional `title` and `description` to each project in `site.json`.
-- [ ] **Unlabelled team photo.** `content/images/team/team-member-2021.png` is probably Luai Otter; once confirmed, set his `photo` in `site.json`. Until then he shows initials.
 - [ ] **Map address.** The Google Maps embed points to "זאב ז'בוטינסקי 14, עכו", but the office address is "גיבורי סיני 12, עכו". Confirm the address and replace `map_embed` (and `map_link`) in `site.json`.
-- [ ] **Contact details.** Confirm everyone's phone and email (several are on `yhaj-eng.com`; Luai's old link pointed to Waseem's address).
 - [ ] **Accessibility coordinator.** Name, phone and email in both `accessibility.md` files, plus the office's physical accessibility if clients visit.
 - [ ] **Web3Forms access key**, as a GitHub secret (see above).
 - [ ] Postal code for the address, if wanted in search results (`address.postal_code` in `site.json`).

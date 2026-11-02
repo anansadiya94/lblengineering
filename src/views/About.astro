@@ -2,8 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Sheet from '../components/Sheet.astro';
-import TeamMember from '../components/TeamMember.astro';
-import { img, page, site, type Lang, type PageBase } from '../lib/content';
+import { img, page, type Lang, type PageBase } from '../lib/content';
 
 interface AboutData extends PageBase {
   title: string;
@@ -12,7 +11,6 @@ interface AboutData extends PageBase {
   image_alt: string;
   services_title: string;
   services: string[];
-  team_title: string;
 }
 
 interface Props {
@@ -36,15 +34,6 @@ const { data } = page<AboutData>(lang, 'about');
       <ul>
         {data.services.map((s) => <li>{s}</li>)}
       </ul>
-    </div>
-  </section>
-
-  <section class="band" aria-labelledby="team-title">
-    <div class="wrap">
-      <h2 id="team-title">{data.team_title}</h2>
-      <div class="team-grid">
-        {site.team.map((m) => <TeamMember lang={lang} member={m} />)}
-      </div>
     </div>
   </section>
 </Base>

@@ -17,5 +17,4 @@ services:
   - "Design of concrete structures for a range of private and other uses."
   - "Supervision of industrial plant construction in civil engineering and mechanical works."
   - "Senior and on-site supervision of the construction of concrete structures for a range of uses."
-team_title: "Our team"
 ---
