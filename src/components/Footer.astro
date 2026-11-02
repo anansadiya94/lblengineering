@@ -25,7 +25,6 @@ const year = new Date().getFullYear();
       <p><span class="tb-label">{t.address}</span>{c.address.street[lang]}, {c.address.city[lang]}</p>
       <p><span class="tb-label">{t.phone}</span><a href={telHref(c.phone)} dir="ltr">{c.phone}</a></p>
       <p><span class="tb-label">{t.email}</span><a href={`mailto:${c.email}`}>{c.email}</a></p>
-      <p><span class="tb-label">{t.fax}</span><span dir="ltr">{c.fax}</span></p>
     </address>
     <nav class="tb-nav" aria-label={t.footer_menu}>
       <ul>

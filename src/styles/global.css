@@ -1170,56 +1170,6 @@ main:focus {
   }
 }
 
-/* Team */
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
-  gap: 48px 32px;
-  margin-top: 48px;
-}
-
-.member-photo {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  margin-bottom: 20px;
-}
-
-.member-initials {
-  display: grid;
-  place-items: center;
-  background: var(--tint);
-  color: var(--teal-ink);
-  font-size: 3.5rem;
-  font-weight: 700;
-}
-
-.member-name {
-  font-size: var(--step-lead);
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.member-role {
-  color: var(--ink-soft);
-}
-
-.member-links {
-  margin: 12px 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--step-sm);
-}
-
-.member-links li {
-  padding-block: 4px;
-  overflow-wrap: anywhere;
-}
-
-.member-links a {
-  font-weight: 500;
-}
-
 /* Projects gallery */
 .gallery-wrap {
   padding-bottom: var(--section);
@@ -1362,15 +1312,6 @@ main:focus {
   font-size: var(--step-lead);
   font-weight: 500;
   margin-bottom: 16px;
-}
-
-.contact-team {
-  display: grid;
-  gap: 32px;
-}
-
-.contact-team .member-name {
-  font-size: var(--step-body);
 }
 
 .contact-form-wrap {
