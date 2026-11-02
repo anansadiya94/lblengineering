@@ -2,16 +2,20 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Sheet from '../components/Sheet.astro';
-import ProjectStrip from '../components/ProjectStrip.astro';
-import { img, page, site, telHref, type Lang, type PageBase } from '../lib/content';
+import { img, page, site, telHref, type Lang, type PageBase, type Project } from '../lib/content';
 import { path, ui } from '../lib/i18n';
 
 interface HomeData extends PageBase {
   hero_title: string;
   hero_text: string;
   hero_cta: string;
+  compare_title: string;
+  compare_text: string;
+  compare_label: string;
+  compare_model: string;
+  compare_site: string;
   services_title: string;
-  services: { title: string; text: string; image: string; image_alt: string }[];
+  services: { title: string; text: string; points?: string[]; image: string; image_alt: string }[];
   about_title: string;
   about_text: string;
   about_image_alt: string;
@@ -33,7 +37,10 @@ const t = ui[lang];
 const c = site.company;
 const home = site.home;
 
-const preview = home.projects_preview.map((src) => site.projects.find((p) => p.src === src)!);
+const project = (src: string): Project => site.projects.find((p) => p.src === src)!;
+const preview = home.projects_preview.map(project);
+const model = project(home.compare.model);
+const onSite = project(home.compare.site);
 ---
 
 <Base lang={lang} pageKey="home" title={data.seo_title} description={data.seo_description}>
@@ -55,6 +62,27 @@ const preview = home.projects_preview.map((src) => site.projects.find((p) => p.s
     />
   </Sheet>
 
+  <section class="compare" aria-labelledby="compare-title" data-compare>
+    <div class="wrap compare-grid">
+      <div class="compare-text">
+        <h2 id="compare-title">{data.compare_title}</h2>
+        <p class="lead">{data.compare_text}</p>
+        <div class="compare-toggle" role="group" aria-label={data.compare_label} hidden>
+          <button type="button" aria-pressed="true" data-show="model">{data.compare_model}</button>
+          <button type="button" aria-pressed="false" data-show="site">{data.compare_site}</button>
+        </div>
+      </div>
+      <div class="compare-frame">
+        <figure class="compare-pic compare-model is-shown" data-pic="model">
+          <Image src={img(model.src)} alt={model.alt[lang]} widths={[800, 1200, 1574]} sizes="(min-width: 800px) 92vw, 100vw" />
+        </figure>
+        <figure class="compare-pic compare-site" data-pic="site">
+          <Image src={img(onSite.src)} alt={onSite.alt[lang]} widths={[640, 960]} sizes="(min-width: 800px) 92vw, 100vw" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <section id="services" class="wrap services" aria-labelledby="services-title">
     <h2 id="services-title">{data.services_title}</h2>
     <ul class="schedule">
@@ -62,7 +90,14 @@ const preview = home.projects_preview.map((src) => site.projects.find((p) => p.s
         data.services.map((s) => (
           <li>
             <h3>{s.title}</h3>
-            <p>{s.text}</p>
+            <div class="schedule-text">
+              <p>{s.text}</p>
+              {s.points && (
+                <ul class="svc-points">
+                  {s.points.map((pt) => <li>{pt}</li>)}
+                </ul>
+              )}
+            </div>
             <Image src={img(s.image)} alt={s.image_alt} widths={[240, 400, 560]} sizes="(min-width: 800px) 22vw, 100vw" />
           </li>
         ))
@@ -98,7 +133,23 @@ const preview = home.projects_preview.map((src) => site.projects.find((p) => p.s
       <h2 id="projects-title">{data.projects_title}</h2>
       <a href={path(lang, 'projects')}>{data.projects_link}</a>
     </div>
-    <ProjectStrip lang={lang} projects={preview} />
+    <ul class="wrap work-grid">
+      {
+        preview.map((p, i) => (
+          <li>
+            <figure>
+              <Image
+                src={img(p.src)}
+                alt={p.alt[lang]}
+                widths={i === 0 ? [640, 960, 1280] : [400, 640]}
+                sizes={i === 0 ? '(min-width: 800px) 62vw, 100vw' : '(min-width: 800px) 30vw, 50vw'}
+              />
+              <figcaption>{p.title?.[lang] ?? p.alt[lang]}</figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <section id="contact" class="wrap talk" aria-labelledby="contact-title">
@@ -108,3 +159,21 @@ const preview = home.projects_preview.map((src) => site.projects.find((p) => p.s
     <a class="button" href={path(lang, 'contact')}>{data.contact_cta}</a>
   </section>
 </Base>
+
+<script>
+  // Model / on-site toggle: both photos show stacked without the script.
+  document.querySelectorAll<HTMLElement>('[data-compare]').forEach((root) => {
+    const toggle = root.querySelector<HTMLElement>('.compare-toggle')!;
+    const buttons = toggle.querySelectorAll<HTMLButtonElement>('[data-show]');
+    root.classList.add('is-live');
+    toggle.hidden = false;
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        root.querySelectorAll<HTMLElement>('[data-pic]').forEach((pic) => {
+          pic.classList.toggle('is-shown', pic.dataset.pic === btn.dataset.show);
+        });
+      });
+    });
+  });
+</script>
